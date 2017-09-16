@@ -1,0 +1,29 @@
+{
+  "name": "koa-router-version",
+  "version": "1.0.1",
+  "description": "Semantic Versioning routing for Koa",
+  "repository": "https://github.com/Lansoweb/koa-router-version",
+  "author": "Leandro Silva <leandro@leandrosilva.info>",
+  "license": "MIT",
+  "private": false,
+  "main": "index.js",
+  "dependencies": {
+    "semver": "^5.4.1"
+  },
+  "engines": {
+    "node": ">=7.6.0"
+  },
+  "keywords": [
+    "koa",
+    "koa2",
+    "koa-router",
+    "semver",
+    "versioning",
+    "api"
+  ],
+  "devDependencies": {
+    "eslint": "^4.7.0",
+    "koa": "^2.3.0",
+    "koa-router": "^7.2.1"
+  }
+}
