@@ -5,8 +5,9 @@ const semver = require('semver');
 function KoaRouterVersion() {
 
   this.options = {
-    headerName: 'Accept-Version',
-    fallbackUnknown: false
+    requestHeader: 'Accept-Version',
+    responseHeader: 'X-Api-Version',
+    fallbackLatest: false
   };
 }
 
@@ -49,22 +50,16 @@ KoaRouterVersion.prototype.version = function(versions, options = {}) {
   });
 
   return (ctx, next) => {
-    const requested = ctx.get(options.headerName || this.options.headerName) || null;
+    const requested = ctx.get(options.requestHeader || this.options.requestHeader) || null;
 
-    let found =find(requested, tuples, options.fallbackUnknown || this.options.fallbackUnknown);
+    let found =find(requested, tuples, options.fallbackLatest || this.options.fallbackLatest);
     if (found) {
       ctx.state.apiVersion = found.version;
+      ctx.set(options.responseHeader || this.options.responseHeader, ctx.state.apiVersion);
       return found.cb(ctx, next);
     }
     ctx.throw(400, requested + ' version is not supported2');
   };
-};
-
-KoaRouterVersion.prototype.middleware = async (ctx, next) => {
-  await next();
-  if (ctx.state.apiVersion) {
-    ctx.set('X-Api-Version', ctx.state.apiVersion);
-  }
 };
 
 let koaApiVersion = module.exports = exports = new KoaRouterVersion;
