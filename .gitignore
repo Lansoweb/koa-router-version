@@ -58,3 +58,4 @@ typings/
 .env
 
 /yarn.lock
+.coveralls.yml

@@ -11,18 +11,7 @@ function KoaRouterVersion() {
   };
 }
 
-KoaRouterVersion.prototype.set = function(key, value) {
-  if (arguments.length === 1) {
-    return this.options[key];
-  }
-
-  this.options[key] = value;
-  return this;
-};
-
-KoaRouterVersion.prototype.get = KoaRouterVersion.prototype.set;
-
-function find(requested, tuples, fallbackUnknown = false) {
+function find(requested, tuples, fallbackLatest = false) {
   if (requested === null || requested === '*') {
     return tuples[0];
   }
@@ -31,7 +20,7 @@ function find(requested, tuples, fallbackUnknown = false) {
       return tuples[i];
     }
   }
-  if (fallbackUnknown) {
+  if (fallbackLatest) {
     return tuples[0];
   }
 
@@ -46,7 +35,7 @@ KoaRouterVersion.prototype.version = function(versions, options = {}) {
     a = a.version;
     b = b.version;
 
-    return semver.lt(a, b) ? 1 : (semver.gt(a, b) ? -1 : 0);
+    return semver.lt(a, b) ? 1 : -1;
   });
 
   return (ctx, next) => {
@@ -58,8 +47,8 @@ KoaRouterVersion.prototype.version = function(versions, options = {}) {
       ctx.set(options.responseHeader || this.options.responseHeader, ctx.state.apiVersion);
       return found.cb(ctx, next);
     }
-    ctx.throw(400, requested + ' version is not supported2');
+    ctx.throw(400, requested + ' version is not supported');
   };
 };
 
-let koaApiVersion = module.exports = exports = new KoaRouterVersion;
+let koaRouterVersion = module.exports = exports = new KoaRouterVersion;
