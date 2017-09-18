@@ -1,0 +1,8 @@
+instrumentation:
+  root: './'
+  includes:
+    - 'index.js'
+reporting:
+  reports:
+    - html
+    - lcov
