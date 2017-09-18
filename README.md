@@ -2,7 +2,7 @@
 
 [![Build Status](http://img.shields.io/travis/Lansoweb/koa-router-version.svg?style=flat)](http://travis-ci.org/Lansoweb/koa-router-version)
 [![NPM Downloads](https://img.shields.io/npm/dm/koa-router-version.svg?style=flat)](https://npmjs.org/package/koa-router-version)
-[![Coverage Status](https://coveralls.io/repos/github/Lansoweb/koa-router-version/badge.svg?branch=master)](https://coveralls.io/github/Lansoweb/koa-router-version?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Lansoweb/koa-router-version/badge.svg?branch=develop)](https://coveralls.io/github/Lansoweb/koa-router-version?branch=develop)
 
 Semantic Versioning routing for [Koa](https://github.com/koajs/koa)
 
