@@ -34,9 +34,6 @@ const detail2 = require('./detail2');
 const app = new Koa();
 const router = new Router();
 
-// Adds the response header with the version used. Optional.
-router.use(api.middleware);
-
 // Defines a version 1.0.0 for todo list
 router.get('todo.list', '/todo', api.version({'1.0.0': list}));
 
