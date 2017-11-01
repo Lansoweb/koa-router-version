@@ -42,8 +42,14 @@ const router = new Router();
 // Defines a version 1.0.0 for todo list
 router.get('todo.list', '/todo', api.version({'1.0.0': list}));
 
-// Defines 2 versions (order is not important)
+// Defines 2 versions (order is NOT important)
 router.get('todo.detail', '/todo/:id', api.version({
+    '1.1.0': detail,
+    '2.1.3': detail2
+}))
+
+// You can specify a route param as version. Will accept both /todo/321 and /v1/todo/321 
+router.get('todo.detail', '/:version(v\\d)?/todo/:id', api.version({
     '1.1.0': detail,
     '2.1.3': detail2
 }))
@@ -72,9 +78,25 @@ X-Api-Version: 1.1.0
 
 {"todo": {}}
 
+# Specifying a version via path
+$ curl -i http://localhost:3000/v1/todo/1
+HTTP/1.1 200 Accepted
+X-Api-Version: 1.1.0
+<more headers>
+
+{"todo": {}}
+
 $ curl -i -H "Accept-Version: ~2" http://localhost:3000/todo/1
 HTTP/1.1 200 Accepted
 X-Api-Version: 2.1.3
+<more headers>
+
+{"todo": {}}
+
+# Path has higher priority than header
+$ curl -i -H "Accept-Version: ~2" http://localhost:3000/v1/todo/1
+HTTP/1.1 200 Accepted
+X-Api-Version: 1.1.0
 <more headers>
 
 {"todo": {}}
@@ -84,7 +106,7 @@ $ curl -H "Accept-Version: ^3.0" http://localhost:3000/todo/1
 HTTP/1.1 400 Bad Request
 <more headers>
 
-^3 version is not supported
+Version ^3 is not supported
 ```
 
 ### Version state variable
@@ -121,6 +143,31 @@ router.get('todo.list', '/todo', api.version(
 ));
 ```
 
+### routeParam
+
+This module expects the path as ```v``` followed by a single number:
+* v1 is equivalent to ^1
+* v2 is equivalent to ^2
+* v11 is equivalent to ^11
+
+The default param is ```version```, but you can change it:
+ 
+```js
+router.get('todo.list', '/:myversion(v\\d)/todo', api.version(
+  {'1.0.0': list},
+  { routeParam: 'myversion' }
+));
+```
+
+In order to make version optional and use the latest, use the ```?``` regex at the end:
+ 
+```js
+router.get('todo.list', '/:myversion(v\\d)?/todo', api.version(
+  {'1.0.0': list},
+  { routeParam: 'myversion' }
+));
+```
+ 
 ### fallbackLatest
 
 When the requested version is not found, the default response is an error, 
