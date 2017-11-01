@@ -7,6 +7,7 @@ function KoaRouterVersion() {
   this.options = {
     requestHeader: 'Accept-Version',
     responseHeader: 'X-Api-Version',
+    routeParam: 'version',
     fallbackLatest: false
   };
 }
@@ -39,15 +40,25 @@ KoaRouterVersion.prototype.version = function(versions, options = {}) {
   });
 
   return (ctx, next) => {
-    const requested = ctx.get(options.requestHeader || this.options.requestHeader) || null;
+    let requested = null;
 
-    let found =find(requested, tuples, options.fallbackLatest || this.options.fallbackLatest);
+    const routeParam = options.routeParam || this.options.routeParam;
+    if (
+      routeParam !== '' &&
+      ctx.params.hasOwnProperty(routeParam) &&
+      typeof ctx.params[routeParam] === 'string'
+    ) {
+      requested = ctx.params[routeParam].substr(1);
+    } else {
+      requested = ctx.get(options.requestHeader || this.options.requestHeader) || null;
+    }
+    let found = find(requested, tuples, options.fallbackLatest || this.options.fallbackLatest);
     if (found) {
       ctx.state.apiVersion = found.version;
       ctx.set(options.responseHeader || this.options.responseHeader, ctx.state.apiVersion);
       return found.cb(ctx, next);
     }
-    ctx.throw(400, requested + ' version is not supported');
+    ctx.throw(400, 'Version ' + requested + ' is not supported');
   };
 };
 
