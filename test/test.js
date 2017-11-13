@@ -226,4 +226,15 @@ describe('KoaRouterVersion', function() {
       });
   });
 
+  it('should use default version', function() {
+
+    return expect(() => api.version({},
+      {
+        fallbackLatest: true,
+        defaultVersion: '1.0.0'
+      }
+    )).to.throw(Error, 'Can not set options "fallbackLatest" and "defaultVersion" at same time');
+
+  });
+
 });
