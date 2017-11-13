@@ -8,7 +8,8 @@ function KoaRouterVersion() {
     requestHeader: 'Accept-Version',
     responseHeader: 'X-Api-Version',
     routeParam: 'version',
-    fallbackLatest: false
+    fallbackLatest: false,
+    defaultVersion: null
   };
 }
 
@@ -31,6 +32,10 @@ function find(requested, tuples, fallbackLatest = false) {
 KoaRouterVersion.prototype.version = function(versions, options = {}) {
   let tuples = [];
 
+  if (options.fallbackLatest && options.defaultVersion) {
+    throw new Error('Can not set options "fallbackLatest" and "defaultVersion" at same time');
+  }
+
   for (let key in versions) tuples.push({version: key, cb: versions[key]});
   tuples.sort(function(a, b) {
     a = a.version;
@@ -51,6 +56,9 @@ KoaRouterVersion.prototype.version = function(versions, options = {}) {
       requested = ctx.params[routeParam].substr(1);
     } else {
       requested = ctx.get(options.requestHeader || this.options.requestHeader) || null;
+    }
+    if (!requested && options.defaultVersion) {
+      requested = options.defaultVersion;
     }
     let found = find(requested, tuples, options.fallbackLatest || this.options.fallbackLatest);
     if (found) {
