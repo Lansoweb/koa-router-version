@@ -1,6 +1,6 @@
 {
   "name": "koa-router-version",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Semantic Versioning routing for Koa",
   "repository": "https://github.com/Lansoweb/koa-router-version",
   "author": "Leandro Silva <leandro@leandrosilva.info>",
