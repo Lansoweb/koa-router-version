@@ -44,6 +44,17 @@ describe('KoaRouterVersion', function() {
         routeParam: 'renamed'
       }
     ));
+
+    router.get('defaultVersion', '/default-todo-version', api.version(
+      {
+        '1.1.0': handler(),
+        '1.0.0': handler(),
+        '2.0.0': handler()
+      },
+      {
+        defaultVersion: '1.0.0'
+      }
+    ));
     router.get('todo2.list', '/todo2', api.version({'1.0.0': handler()}));
     router.get('todo3.list', '/todo3', api.version({'1.3.0': handler()}, { fallbackLatest:true }));
     app.use(router.routes());
@@ -200,6 +211,17 @@ describe('KoaRouterVersion', function() {
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
         expect(res.headers['x-api-version']).to.equal('1.1.0');
+        done();
+      });
+  });
+
+  it('should use default version', function(done) {
+
+    request(server)
+      .get('/default-todo-version')
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(200);
+        expect(res.headers['x-api-version']).to.equal('1.0.0');
         done();
       });
   });
